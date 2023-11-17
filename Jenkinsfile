@@ -21,11 +21,13 @@ stage('Build') {
             script {
                 // Use Maven tool
                 def mvnHome = tool 'Maven'
-                sh "${mvnHome}/bin/mvn clean package"
+                // Run Maven commands from the correct directory
+                sh "cd /var/lib/jenkins/workspace/website && ${mvnHome}/bin/mvn clean package"
             }
         }
     }
 }
+
 
         stage('Deploy to GAE') {
             steps {
