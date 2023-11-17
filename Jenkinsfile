@@ -40,3 +40,6 @@ pipeline {
         // Additional stages...
     }
 }
+environment {
+    GOOGLE_APPLICATION_CREDENTIALS = credentials('bd6ec655-e156-4403-843c-0b6ec64aece0')
+}
