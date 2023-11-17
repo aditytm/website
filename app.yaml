@@ -1,0 +1,17 @@
+runtime: python39  # Specify the runtime. This can be python27, python37, or python38, depending on your preference.
+
+handlers:
+# Serve all static files with automatic cache busting.
+- url: /(.+\.(gif|png|jpg|css|js|ico|html|xml|json|svg))$
+  static_files: \1
+  upload: .+\.(gif|png|jpg|css|js|ico|html|xml|json|svg)$
+
+# Handle requests to the root URL ("/") by serving the index.html file.
+- url: /
+  static_files: index.html
+  upload: index.html
+
+# If the requested resource is not found, redirect to the index.html page.
+- url: /.*
+  script: auto
+
