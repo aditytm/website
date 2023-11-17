@@ -28,19 +28,23 @@ stage('Build') {
     }
 }
 
+pipeline {
+    agent any
 
-        stage('Deploy to GAE') {
+    environment {
+        GOOGLE_APPLICATION_CREDENTIALS = credentials('6a745940-cbb8-44db-8bce-7c95ada646d3')
+    }
+
+    stages {
+        stage('Authenticate with GCP') {
             steps {
                 script {
-                    // Configure Google Cloud SDK with credentials
-                    withCredentials([file(credentialsId: '6a745940-cbb8-44db-8bce-7c95ada646d3', variable: 'GCP_KEY')]) {
-                        sh "gcloud auth activate-service-account --key-file=${GCP_KEY}"
-                    }
-
-                    // Deploy to Google App Engine
-                    sh "gcloud app deploy --project=${GCP_PROJECT} --version=${BUILD_NUMBER} --no-promote --stop-previous-version"
+                    sh 'gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS'
                 }
             }
         }
+
+        // Additional stages...
     }
 }
+
