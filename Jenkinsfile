@@ -4,7 +4,7 @@ pipeline {
     environment {
         GCP_PROJECT = 'yashproject-401611'
         GCP_APP_ENGINE_SERVICE = 'default' // or your service name
-        GCP_CREDENTIALS = credentials('f79769f2-6bb2-4682-922a-8ff7ac660b24') // Replace with your GCP credentials ID
+        GCP_CREDENTIALS = credentials('6a745940-cbb8-44db-8bce-7c95ada646d3') // Replace with your GCP credentials ID
     }
 
     stages {
@@ -33,7 +33,7 @@ stage('Build') {
             steps {
                 script {
                     // Configure Google Cloud SDK with credentials
-                    withCredentials([file(credentialsId: 'f79769f2-6bb2-4682-922a-8ff7ac660b24', variable: 'GCP_KEY')]) {
+                    withCredentials([file(credentialsId: '6a745940-cbb8-44db-8bce-7c95ada646d3', variable: 'GCP_KEY')]) {
                         sh "gcloud auth activate-service-account --key-file=${GCP_KEY}"
                     }
 
