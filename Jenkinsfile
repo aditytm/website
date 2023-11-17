@@ -4,8 +4,7 @@ pipeline {
     environment {
         GCP_PROJECT = 'yashproject-401611'
         GCP_APP_ENGINE_SERVICE = 'default' // or your service name
-        GCP_CREDENTIALS = credentials('6a745940-cbb8-44db-8bce-7c95ada646d3') // Replace with your GCP credentials ID
-        GOOGLE_APPLICATION_CREDENTIALS = credentials('6a745940-cbb8-44db-8bce-7c95ada646d3')
+        GCP_CREDENTIALS = credentials('your-gcp-credentials-id') // Replace with your GCP credentials ID
     }
 
     stages {
@@ -15,31 +14,33 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                // Navigate to the project directory
-                dir('/var/lib/jenkins/workspace/website') {
-                    script {
-                        // Use Maven tool
-                        def mvnHome = tool 'Maven'
-                        // Run Maven commands from the correct directory
-                        sh "cd /var/lib/jenkins/workspace/website && ${mvnHome}/bin/mvn clean package"
-                    }
-                }
+stage('Build') {
+    steps {
+        // Navigate to the project directory
+        dir('/var/lib/jenkins/workspace/website') {
+            script {
+                // Use Maven tool
+                def mvnHome = tool 'Maven'
+                // Run Maven commands from the correct directory
+                sh "cd /var/lib/jenkins/workspace/website && ${mvnHome}/bin/mvn clean package"
             }
         }
-
-        stage('Authenticate with GCP') {
-            steps {
-                script {
-                    sh 'gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS'
-                }
-            }
-        }
-
-        // Additional stages...
     }
 }
-environment {
-    GOOGLE_APPLICATION_CREDENTIALS = credentials('6a745940-cbb8-44db-8bce-7c95ada646d3')
+
+
+        stage('Deploy to GAE') {
+            steps {
+                script {
+                    // Configure Google Cloud SDK with credentials
+                    withCredentials([file(credentialsId: 'your-gcp-credentials-id', variable: 'GCP_KEY')]) {
+                        sh "gcloud auth activate-service-account --key-file=${GCP_KEY}"
+                    }
+
+                    // Deploy to Google App Engine
+                    sh "gcloud app deploy --project=${GCP_PROJECT} --version=${BUILD_NUMBER} --no-promote --stop-previous-version"
+                }
+            }
+        }
+    }
 }
