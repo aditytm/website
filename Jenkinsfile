@@ -3,42 +3,30 @@ pipeline {
 
     environment {
         GCP_PROJECT = 'yashproject-401611'
-        GCP_APP_ENGINE_SERVICE = 'default' // or your service name
-        GCP_CREDENTIALS = credentials('your-gcp-credentials-id') // Replace with your GCP credentials ID
+        GCP_CREDENTIALS = credentials('your-gcp-credentials-id')
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git credentialsId: 'bd6ec655-e156-4403-843c-0b6ec64aece0', url: 'https://github.com/aditytm/website.git', branch: 'main'
+                checkout scm
             }
         }
 
-stage('Build') {
-    steps {
-        // Navigate to the project directory
-        dir('/var/lib/jenkins/workspace/website') {
-            script {
-                // Use Maven tool
-                def mvnHome = tool 'Maven'
-                // Run Maven commands from the correct directory
-                sh "cd /var/lib/jenkins/workspace/website && ${mvnHome}/bin/mvn clean package"
-            }
-        }
-    }
-}
-
-
-        stage('Deploy to GAE') {
+        stage('Build and Push Docker Image') {
             steps {
                 script {
-                    // Configure Google Cloud SDK with credentials
-                    withCredentials([file(credentialsId: 'your-gcp-credentials-id', variable: 'GCP_KEY')]) {
-                        sh "gcloud auth activate-service-account --key-file=${GCP_KEY}"
-                    }
+                    sh 'gcloud auth activate-service-account --key-file=${GCP_CREDENTIALS}'
+                    sh 'gcloud config set project ${GCP_PROJECT}'
+                    sh 'gcloud builds submit --tag gcr.io/${GCP_PROJECT}/your-app:latest .'
+                }
+            }
+        }
 
-                    // Deploy to Google App Engine
-                    sh "gcloud app deploy --project=${GCP_PROJECT} --version=${BUILD_NUMBER} --no-promote --stop-previous-version"
+        stage('Deploy to App Engine') {
+            steps {
+                script {
+                    sh 'gcloud app deploy --version=jenkins --image-url=gcr.io/${GCP_PROJECT}/your-app:latest'
                 }
             }
         }
