@@ -14,12 +14,18 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                // Build your application if needed
-                // For example, if it's a Maven project:
-                sh 'mvn clean package'
+stage('Build') {
+    steps {
+        // Navigate to the project directory
+        dir('/var/lib/jenkins/workspace/website') {
+            script {
+                // Build your application using Maven
+                def mvnHome = tool 'Maven'
+                sh "${mvnHome}/bin/mvn clean package"
             }
+        }
+    }
+}
         }
 
         stage('Deploy to GAE') {
