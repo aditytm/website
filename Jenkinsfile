@@ -5,6 +5,7 @@ pipeline {
         GCP_PROJECT = 'yashproject-401611'
         GCP_APP_ENGINE_SERVICE = 'default' // or your service name
         GCP_CREDENTIALS = credentials('6a745940-cbb8-44db-8bce-7c95ada646d3') // Replace with your GCP credentials ID
+        GOOGLE_APPLICATION_CREDENTIALS = credentials('6a745940-cbb8-44db-8bce-7c95ada646d3')
     }
 
     stages {
@@ -14,25 +15,20 @@ pipeline {
             }
         }
 
-stage('Build') {
-    steps {
-        // Navigate to the project directory
-        dir('/var/lib/jenkins/workspace/website') {
-            script {
-                // Use Maven tool
-                def mvnHome = tool 'Maven'
-                // Run Maven commands from the correct directory
-                sh "cd /var/lib/jenkins/workspace/website && ${mvnHome}/bin/mvn clean package"
+        stage('Build') {
+            steps {
+                // Navigate to the project directory
+                dir('/var/lib/jenkins/workspace/website') {
+                    script {
+                        // Use Maven tool
+                        def mvnHome = tool 'Maven'
+                        // Run Maven commands from the correct directory
+                        sh "cd /var/lib/jenkins/workspace/website && ${mvnHome}/bin/mvn clean package"
+                    }
+                }
             }
         }
-    }
-}
-stage('Deploy to GAE') {
-    environment {
-        GOOGLE_APPLICATION_CREDENTIALS = credentials('6a745940-cbb8-44db-8bce-7c95ada646d3')
-    }
 
-    stages {
         stage('Authenticate with GCP') {
             steps {
                 script {
@@ -43,3 +39,4 @@ stage('Deploy to GAE') {
 
         // Additional stages...
     }
+}
