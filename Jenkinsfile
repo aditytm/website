@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        // Set environment variables if needed
         GCP_PROJECT = 'yashproject-401611'
         GCP_APP_ENGINE_SERVICE = 'default' // or your service name
     }
@@ -10,9 +9,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout your source code from version control
-                // For example, if you're using Git:
-                git 'https://github.com/aditytm/website.git/'
+                // Checkout your source code from GitHub
+                git credentialsId: 'your-github-credentials-id', url: 'https://github.com/aditytm/website.git'
             }
         }
 
