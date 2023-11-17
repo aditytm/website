@@ -27,10 +27,7 @@ stage('Build') {
         }
     }
 }
-
-pipeline {
-    agent any
-
+stage('Deploy to GAE') {
     environment {
         GOOGLE_APPLICATION_CREDENTIALS = credentials('6a745940-cbb8-44db-8bce-7c95ada646d3')
     }
@@ -46,4 +43,3 @@ pipeline {
 
         // Additional stages...
     }
-}
