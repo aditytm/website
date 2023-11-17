@@ -33,7 +33,7 @@ stage('Build') {
             steps {
                 script {
                     // Configure Google Cloud SDK with credentials
-                    withCredentials([file(credentialsId: 'your-gcp-credentials-id', variable: 'GCP_KEY')]) {
+                    withCredentials([file(credentialsId: 'f79769f2-6bb2-4682-922a-8ff7ac660b24', variable: 'GCP_KEY')]) {
                         sh "gcloud auth activate-service-account --key-file=${GCP_KEY}"
                     }
 
