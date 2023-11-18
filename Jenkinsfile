@@ -4,7 +4,7 @@ pipeline {
     environment {
         GCP_PROJECT = 'yashproject-401611'
         CLIENT_EMAIL = 'adityagurjar20001234123@yashproject-401611.iam.gserviceaccount.com'
-        GCP_CREDENTIALS_ID = '8d5ba43d-6f56-4012-ac4c-a18717458832'
+        GCP_CREDENTIALS_ID = 'e1617e72-fd8d-4c0e-b916-ae8fcfa9cb65'
     }
 
     stages {
