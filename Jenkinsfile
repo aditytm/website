@@ -4,6 +4,7 @@ pipeline {
     environment {
         GCP_PROJECT = 'yashproject-401611'
         GCP_APP_ENGINE_SERVICE = 'default' // or your service name
+        CLIENT_EMAIL = '143055914841-compute@developer.gserviceaccount.com'
         GCP_CREDENTIALS = credentials('1ee2a44f-3263-41f5-8225-364e7f1c95e1') // Replace with your GCP credentials ID
     }
 
@@ -27,7 +28,13 @@ stage('Build') {
         }
     }
 }
-
+        stage('Gcloud Compute') {
+            steps {
+                script {
+                    sh 'gcloud compute zones list'
+                }
+            }
+        }
 
         stage('Deploy to GAE') {
             steps {
@@ -43,4 +50,12 @@ stage('Build') {
             }
         }
     }
+        post {
+        always {
+            script {
+                sh 'gcloud auth revoke $CLIENT_EMAIL'
+            }
+        }
+    }
+}
 }
