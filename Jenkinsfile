@@ -40,9 +40,10 @@ stage('Build') {
             steps {
                 script {
                     // Configure Google Cloud SDK with credentials
-withCredentials([googleRobotPrivateKey(credentialsId: '1ee2a44f-3263-41f5-8225-364e7f1c95e1',jsonKeyFileVariable: 'JSON_KEY')]) {
+withCredentials([googleRobot(credentials: 'your-gcp-credentials-id', jsonKeyFileVariable: 'JSON_KEY')]) {
     // Your pipeline steps that require credentials
 }
+
 
                     // Deploy to Google App Engine
                     sh "gcloud app deploy --project=${GCP_PROJECT} --version=${BUILD_NUMBER} --no-promote --stop-previous-version"
