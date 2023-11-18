@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         GCP_PROJECT = 'yashproject-401611'
-        CLIENT_EMAIL = 'adityagurjar20001234123@yashproject-401611.iam.gserviceaccount.com'
+        CLIENT_EMAIL = 'adityagurjar20001234123@gmail.com'
         GCP_CREDENTIALS_ID = 'e1617e72-fd8d-4c0e-b916-ae8fcfa9cb65'
     }
 
