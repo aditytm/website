@@ -4,7 +4,7 @@ pipeline {
     environment {
         GCP_PROJECT = 'yashproject-401611'
         GCP_APP_ENGINE_SERVICE = 'default' // or your service name
-        GCP_CREDENTIALS = credentials('f84e1959-7c13-4c43-8c60-cf8d77d1107f') // Replace with your GCP credentials ID
+        GCP_CREDENTIALS = credentials('8d5ba43d-6f56-4012-ac4c-a18717458832') // Replace with your GCP credentials ID
     }
 
     stages {
@@ -36,6 +36,35 @@ stage('Build') {
                     withCredentials([file(credentialsId: 'your-gcp-credentials-id', variable: 'GCP_KEY')]) {
                         sh "gcloud auth activate-service-account --key-file=${GCP_KEY}"
                     }
+
+pipeline {
+    agent any
+
+    environment {
+        GOOGLE_APPLICATION_CREDENTIALS = credentials('8d5ba43d-6f56-4012-ac4c-a18717458832')
+    }
+
+    stages {
+        stage('Authenticate with GCP') {
+            steps {
+                script {
+                    sh 'gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS'
+                }
+            }
+        }
+
+        stage('Deploy to App Engine') {
+            steps {
+                script {
+                    sh 'gcloud app deploy'
+                    // Additional deployment steps or commands
+                }
+            }
+        }
+    }
+
+    // Additional stages...
+}
 
                     // Deploy to Google App Engine
                     sh "gcloud app deploy --project=${GCP_PROJECT} --version=${BUILD_NUMBER} --no-promote --stop-previous-version"
