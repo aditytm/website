@@ -3,9 +3,24 @@ pipeline {
 
     environment {
         GCP_PROJECT = 'yashproject-401611'
-        GCP_APP_ENGINE_SERVICE = 'default' // or your service name
-        GCP_CREDENTIALS = credentials('8d5ba43d-6f56-4012-ac4c-a18717458832') // Replace with your GCP credentials ID
+         CLIENT_EMAIL='adityagurjar20001234123@yashproject-401611.iam.gserviceaccount.com'
+        GCP_CREDENTIALS_ID = '8d5ba43d-6f56-4012-ac4c-a18717458832'
     }
+
+    stages {
+        stage('Authenticate with GCP') {
+            steps {
+                script {
+                    withCredentials([file(credentialsId: GCP_CREDENTIALS_ID, variable: 'GCP_KEY')]) {
+                        // Authenticate with GCP using the service account JSON key
+                        sh """
+                            gcloud auth activate-service-account --key-file=${GCP_KEY}
+                            gcloud config set project ${GCP_PROJECT}
+                        """
+                    }
+                }
+            }
+        }
 
     stages {
         stage('Checkout') {
@@ -28,19 +43,5 @@ stage('Build') {
     }
 }
 
-
-        stage('Deploy to GAE') {
-            steps {
-                script {
-                    // Configure Google Cloud SDK with credentials
-                    withCredentials([file(credentialsId: 'your-gcp-credentials-id', variable: 'GCP_KEY')]) {
-                        sh "gcloud auth activate-service-account --key-file=${GCP_KEY}"
-                    }
-
-                    // Deploy to Google App Engine
-                    sh "gcloud app deploy --project=${GCP_PROJECT} --version=${BUILD_NUMBER} --no-promote --stop-previous-version"
-                }
-            }
-        }
     }
 }
