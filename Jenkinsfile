@@ -41,7 +41,7 @@ pipeline {
             steps {
                 script {
                     // Configure Google Cloud SDK with credentials
-                    withCredentials([file(credentials: 'your-gcp-credentials-id', variable: 'GCP_KEY')]) {
+                    withGCP_CREDENTIALS([file(credentials: 'your-gcp-credentials-id', variable: 'GCP_KEY')]) {
                         sh "gcloud auth activate-service-account --key-file=${GCP_KEY}"
 
                         // Deploy to Google App Engine
