@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         GCP_PROJECT = 'yashproject-401611'
-        CLIENT_EMAIL = 'adityagurjar20001234123@gmail.com'
         GCP_CREDENTIALS_ID = 'e1617e72-fd8d-4c0e-b916-ae8fcfa9cb65'
     }
 
@@ -68,14 +67,6 @@ pipeline {
                         sh "cd /var/lib/jenkins/workspace/website && ${mvnHome}/bin/mvn clean package"
                     }
                 }
-            }
-        }
-    }
-
-    post {
-        always {
-            script {
-                sh 'gcloud auth revoke $CLIENT_EMAIL'
             }
         }
     }
