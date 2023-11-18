@@ -44,8 +44,6 @@ withCredentials([googleRobotPrivateKey(credentialsId: '1ee2a44f-3263-41f5-8225-3
     // Your pipeline steps that require credentials
 }
 
-                    }
-
                     // Deploy to Google App Engine
                     sh "gcloud app deploy --project=${GCP_PROJECT} --version=${BUILD_NUMBER} --no-promote --stop-previous-version"
                 }
