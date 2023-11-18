@@ -20,13 +20,6 @@ pipeline {
             }
         }
 
-        stage('Gcloud Compute') {
-            steps {
-                script {
-                    sh 'gcloud compute zones list'
-                }
-            }
-        }
 
         stage('Gcloud App Engine') {
             steps {
