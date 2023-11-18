@@ -7,20 +7,52 @@ pipeline {
         GCP_CREDENTIALS_ID = '8d5ba43d-6f56-4012-ac4c-a18717458832'
     }
 
-    stages {
-        stage('Authenticate with GCP') {
-            steps {
-                script {
-                    withCredentials([file(credentialsId: GCP_CREDENTIALS_ID, variable: 'GCP_KEY')]) {
-                        // Authenticate with GCP using the service account JSON key
-                        sh """
-                            gcloud auth activate-service-account --key-file=${GCP_KEY}
-                            gcloud config set project ${GCP_PROJECT}
-                        """
-                    }
-                }
-            }
-        }
+ stages {
+    stage('Gcloud Auth') {
+      steps {
+        sh '''
+          gcloud version
+          gcloud auth activate-service-account --key-file="$GCLOUD_CREDS"
+          echo "my project id is $CLOUDSDK_CORE_PROJECT"
+          gcloud compute zones list
+        '''
+      }
+    }
+
+     stage('Gcloud Compute') {
+      steps {
+        sh '''
+          gcloud compute zones list
+        '''
+      }
+    }
+
+     stage('Gcloud App Engine') {
+      steps {
+        sh '''
+          Zero_Traffic=$(gcloud app versions list --filter="traffic_split=0" --format="table(version.id)" --project $CLOUDSDK_CORE_PROJECT | tail -n +2)
+          export Zero_Traffic
+          for row in $Zero_Traffic
+            do
+              echo  $row
+              yes | gcloud app versions delete $row --project $CLOUDSDK_CORE_PROJECT
+            done
+        '''
+      }
+    }
+
+
+
+
+  }
+
+
+ post {
+    always {
+      sh 'gcloud auth revoke $CLIENT_EMAIL'
+    }
+   }
+
 
     stages {
         stage('Checkout') {
