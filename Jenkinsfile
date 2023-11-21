@@ -9,9 +9,9 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout SCM') {
             steps {
-                git credentialsId: 'f449e753-af7d-45a5-9eea-a71d00ee7548', url: 'https://github.com/aditytm/website.git', branch: 'main'
+                checkout scm
             }
         }
 
