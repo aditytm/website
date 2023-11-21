@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git credentialsId: '', url: 'https://github.com/aditytm/website.git', branch: 'main'
+                git credentialsId: 'f449e753-af7d-45a5-9eea-a71d00ee7548', url: 'https://github.com/aditytm/website.git', branch: 'main'
             }
         }
 
